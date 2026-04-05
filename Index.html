@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Best Uni Finder — European Universities Guide</title>
+  <meta name="description" content="Find the best European university for you. Filter by budget, entry score, and major. Free, no signup needed.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #f0ece4;
+      --bg2:     #e8e2d8;
+      --bg3:     #ddd6c8;
+      --ink:     #1a1612;
+      --ink2:    #3d3730;
+      --muted:   #8a8070;
+      --accent:  #2a5c45;
+      --accent2: #3a7a5e;
+      --gold:    #b07d2a;
+      --card-bg: #faf8f4;
+      --border:  rgba(26,22,18,0.1);
+      --shadow:  0 4px 24px rgba(26,22,18,0.08);
+      --shadow-lg: 0 20px 60px rgba(26,22,18,0.2);
+      --radius:  12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ─── HEADER ─── */
+    .site-header {
+      background: var(--ink);
+      color: var(--bg);
+      padding: 56px 24px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .site-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(42,92,69,0.3) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 20%, rgba(176,125,42,0.15) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .header-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      border: 1px solid rgba(58,122,94,0.5);
+      padding: 5px 16px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .site-header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.6rem, 7vw, 5rem);
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 14px;
+      position: relative;
+    }
+    .site-header h1 em { font-style: italic; color: var(--accent2); }
+    .site-header p { font-size: 15px; color: rgba(240,236,228,0.6); max-width: 480px; margin: 0 auto; position: relative; }
+
+    /* ─── DONATION BANNER ─── */
+    .donation-banner {
+      background: linear-gradient(135deg, #fefaf0 0%, #fdf5e0 100%);
+      border: 1px solid rgba(176,125,42,0.25);
+      border-radius: var(--radius);
+      padding: 22px 28px;
+      margin: 28px auto;
+      max-width: 900px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 12px rgba(176,125,42,0.08);
+    }
+    .donation-emoji { font-size: 2rem; flex-shrink: 0; }
+    .donation-text { flex: 1; min-width: 200px; }
+    .donation-text strong {
+      font-family: 'Fraunces', serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .donation-text p { font-size: 13px; color: var(--ink2); line-height: 1.5; }
+    .donate-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold);
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 22px;
+      border-radius: 8px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .donate-btn:hover { background: #c48f30; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(176,125,42,0.3); }
+
+    /* ─── MAIN ─── */
+    .main-wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px 80px; }
+
+    /* ─── FILTERS ─── */
+    .filters-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow);
+    }
+    .filters-title {
+      font-family: 'Fraunces', serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .country-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .pill {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 14px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--ink2);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .pill:hover { border-color: var(--accent); color: var(--accent); }
+    .pill.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .pill.all-pill { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .filter-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .filter-group input,
+    .filter-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s;
+      appearance: none;
+    }
+    .filter-group input:focus,
+    .filter-group select:focus { border-color: var(--accent); }
+    .filter-group input::placeholder { color: var(--muted); }
+
+    .filter-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .btn-filter {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 26px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+    .results-count { font-size: 13px; color: var(--muted); margin-left: auto; }
+
+    /* ─── GRID ─── */
+    .unis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 18px;
+    }
+    .uni-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+    .uni-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(26,22,18,0.12); }
+    .uni-card-top { padding: 22px 22px 0; }
+    .uni-card-flag { font-size: 1.6rem; margin-bottom: 10px; display: block; }
+    .uni-card-name { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; line-height: 1.25; margin-bottom: 4px; }
+    .uni-card-country { font-size: 12px; color: var(--muted); font-weight: 500; letter-spacing: 0.04em; margin-bottom: 12px; }
+    .uni-card-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; margin-bottom: 16px; }
+
+    .uni-card-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+    }
+    .stat { padding: 10px 14px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .stat-label { font-size: 9px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+    .stat-value { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; }
+    .stat-value.free { color: var(--accent); }
+
+    .uni-card-footer {
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .majors-wrap { display: flex; flex-wrap: wrap; gap: 5px; flex: 1; }
+    .major-tag { font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 4px; background: var(--bg2); color: var(--ink2); }
+    .view-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 7px 16px;
+      border-radius: 7px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .view-btn:hover { background: var(--accent2); }
+
+    .no-results { text-align: center; padding: 60px 20px; grid-column: 1/-1; }
+    .no-results-icon { font-size: 3rem; margin-bottom: 14px; }
+    .no-results h3 { font-family: 'Fraunces', serif; font-size: 22px; margin-bottom: 8px; }
+    .no-results p { font-size: 14px; color: var(--muted); }
+
+    /* ─── UNI MODAL ─── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,22,18,0.55);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+    .modal {
+      background: var(--card-bg);
+      border-radius: 16px;
+      max-width: 580px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.25s ease;
+    }
+    .modal-header { padding: 28px 28px 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .modal-flag { font-size: 2.2rem; }
+    .modal-close {
+      background: var(--bg2);
+      border: none;
+      border-radius: 50%;
+      width: 34px; height: 34px;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--muted);
+      transition: background 0.15s;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-close:hover { background: var(--bg3); color: var(--ink); }
+    .modal-body { padding: 16px 28px 28px; }
+    .modal-country { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .modal-name { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 700; line-height: 1.15; margin-bottom: 16px; }
+    .modal-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+    .modal-stat { background: var(--bg); border-radius: 10px; padding: 12px; }
+    .modal-stat .stat-label { font-size: 9px; }
+    .modal-stat .stat-value { font-size: 16px; }
+    .modal-section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; margin-top: 18px; }
+    .modal-desc { font-size: 14px; line-height: 1.75; color: var(--ink2); margin-bottom: 18px; }
+    .modal-majors { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 24px; }
+    .modal-majors .major-tag { font-size: 12px; padding: 5px 12px; }
+    .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-website {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent); color: white; text-decoration: none;
+      font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+      padding: 12px 24px; border-radius: 9px; transition: all 0.18s;
+    }
+    .btn-website:hover { background: var(--accent2); transform: translateY(-1px); }
+    .btn-close-modal {
+      font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+      padding: 12px 24px; border-radius: 9px; border: 1px solid var(--border);
+      background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s;
+    }
+    .btn-close-modal:hover { border-color: var(--ink); color: var(--ink); }
+
+    /* ─── PAYPAL MODAL ─── */
+    .paypal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,22,18,0.65);
+      backdrop-filter: blur(6px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .paypal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+    .paypal-modal {
+      background: linear-gradient(135deg, #fefaf0, #fdf5e0);
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 40px 36px;
+      text-align: center;
+      box-shadow: 0 30px 80px rgba(26,22,18,0.25);
+      animation: slideUp 0.3s ease;
+      position: relative;
+    }
+    .paypal-modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: var(--bg2);
+      border: none;
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      cursor: pointer;
+      font-size: 15px;
+      color: var(--muted);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .paypal-modal-close:hover { background: var(--bg3); }
+    .paypal-heart { font-size: 3rem; margin-bottom: 16px; display: block; }
+    .paypal-modal h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .paypal-modal p { font-size: 14px; color: var(--ink2); line-height: 1.65; margin-bottom: 28px; }
+    .paypal-modal p strong { color: var(--gold); }
+    .paypal-donate-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #0070ba;
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 14px 36px;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.2s;
+      width: 100%;
+      margin-bottom: 14px;
+    }
+    .paypal-donate-btn:hover { background: #005ea6; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,112,186,0.35); }
+    .paypal-skip {
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      text-decoration: underline;
+      transition: color 0.15s;
+    }
+    .paypal-skip:hover { color: var(--ink); }
+
+    /* ─── FOOTER ─── */
+    footer { background: var(--ink); color: rgba(240,236,228,0.4); text-align: center; padding: 28px; font-size: 12px; letter-spacing: 0.06em; }
+    footer a { color: var(--accent2); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+    @keyframes slideUp { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+    @keyframes fadeUp  { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 600px) {
+      .filter-grid { grid-template-columns: 1fr 1fr; }
+      .unis-grid { grid-template-columns: 1fr; }
+      .modal-stats-grid { grid-template-columns: 1fr 1fr; }
+      .site-header { padding: 40px 20px 36px; }
+      .modal-body { padding: 14px 20px 24px; }
+      .modal-header { padding: 22px 20px 0; }
+      .paypal-modal { padding: 36px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="header-badge">✦ 20 Top European Universities</div>
+  <h1>Find Your<br><em>Perfect Uni</em></h1>
+  <p>Filter by budget, entry score and major — discover the European university that's right for you.</p>
+</header>
+
+<!-- ═══ MAIN ══════════════════════════════════════════════════ -->
+<main class="main-wrap">
+
+  <!-- Donation Banner -->
+  <div class="donation-banner">
+    <div class="donation-emoji">👋</div>
+    <div class="donation-text">
+      <strong>Hi, I'm a young developer — this took weeks to build!</strong>
+      <p>This tool is completely free. If it helped you find your dream university, consider buying me a coffee — it keeps this site running and ad-free.</p>
+    </div>
+    <button class="donate-btn" onclick="openPaypal()">☕ Support via PayPal</button>
+  </div>
+
+  <!-- Filters -->
+  <section class="filters-section">
+    <div class="filters-title">🔍 Filter Universities</div>
+    <div id="countryPills" class="country-pills"></div>
+    <div class="filter-grid">
+      <div class="filter-group">
+        <label for="filterBudget">Max Tuition / year (€)</label>
+        <input type="number" id="filterBudget" placeholder="e.g. 5000" min="0" oninput="applyFilters()">
+      </div>
+      <div class="filter-group">
+        <label for="filterScore">My Entry Score (%)</label>
+        <input type="number" id="filterScore" placeholder="e.g. 75" min="0" max="100" oninput="applyFilters()">
+      </div>
+      <div class="filter-group">
+        <label for="filterMajor">Major / Subject</label>
+        <input type="text" id="filterMajor" placeholder="e.g. Computer Science" oninput="applyFilters()">
+      </div>
+      <div class="filter-group">
+        <label for="filterType">University Type</label>
+        <select id="filterType" onchange="applyFilters()">
+          <option value="">All Types</option>
+          <option value="Public">Public</option>
+          <option value="Private">Private</option>
+        </select>
+      </div>
+    </div>
+    <div class="filter-actions">
+      <button class="btn-filter btn-primary" onclick="applyFilters()">Apply Filters</button>
+      <button class="btn-filter btn-ghost" onclick="resetFilters()">Reset</button>
+      <span class="results-count" id="resultsCount"></span>
+    </div>
+  </section>
+
+  <!-- University Grid -->
+  <div class="unis-grid" id="uniGrid"></div>
+
+</main>
+
+<!-- ═══ UNI DETAIL MODAL ══════════════════════════════════════ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<!-- ═══ PAYPAL MODAL ═════════════════════════════════════════ -->
+<div class="paypal-overlay" id="paypalOverlay">
+  <div class="paypal-modal">
+    <button class="paypal-modal-close" onclick="closePaypal()">✕</button>
+    <span class="paypal-heart">☕</span>
+    <h2>Support This Project</h2>
+    <p>I'm a young developer who spent weeks researching and building this tool — completely free, no ads, no signup.<br><br>
+    <strong>Even €1 makes a real difference</strong> and keeps this site alive and updated. Thank you so much! 🙏</p>
+    <a class="paypal-donate-btn" href="https://www.paypal.com/ncp/payment/N9AHGQB7GBWAY" target="_blank" rel="noopener">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M7.144 19.532l1.049-5.967.059-.337H8.2l-.056.337C7.17 19.126 6.003 20 4.168 20H3l1.27-7.202C4.56 11.272 5.608 10.5 7 10.5h3.044c2.215 0 3.456 1.042 3.156 3.156-.372 2.641-2.028 3.719-4.082 3.719H7.9l-.756 2.157z"/><path d="M20.556 7.796C20.556 10.948 18.104 13 14.9 13H13l-1 6H9l2.5-14H17c2.2 0 3.556 1.052 3.556 2.796z"/></svg>
+      Donate via PayPal
+    </a>
+    <br>
+    <button class="paypal-skip" onclick="closePaypal()">No thanks, continue browsing</button>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════ -->
+<footer>
+  Built with ❤️ by a student, for students &nbsp;·&nbsp;
+  <a href="#" onclick="openPaypal(); return false;">Support this project</a>
+  &nbsp;·&nbsp; Data accurate as of 2025
+</footer>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────
+const UNIS = [{"name":"University of Amsterdam","country":"Netherlands","flag":"🇳🇱","majors":["Economics","Law","Computer Science","Psychology","Political Science"],"min_score":80,"tuition":2314,"population":39000,"type":"Public","website":"https://www.uva.nl/en","short_description":"One of Europe's top research universities, known for its liberal academic culture and stunning canal-side campus in the heart of Amsterdam.","full_description":"The University of Amsterdam (UvA) consistently ranks among Europe's top 100 universities and is celebrated for its world-class research in economics, law, and social sciences. With over 39,000 students from 100+ nationalities, it offers a truly cosmopolitan environment. The city of Amsterdam itself is the campus — students study in historic 17th-century buildings alongside modern research facilities. The UvA's Amsterdam Business School and Amsterdam Law School are particularly prestigious, attracting students globally."},{"name":"Ludwig Maximilian University of Munich","country":"Germany","flag":"🇩🇪","majors":["Medicine","Natural Sciences","Law","Philosophy","Business"],"min_score":85,"tuition":150,"population":52000,"type":"Public","website":"https://www.lmu.de/en","short_description":"Germany's premier research university, alma mater of 42 Nobel laureates, offering world-class education at almost zero tuition.","full_description":"LMU Munich is consistently ranked among Germany's elite universities and belongs to the German Excellence Initiative. It has produced an extraordinary 42 Nobel Prize winners including Max Planck and Werner Heisenberg. The university's medical faculty is among the best in Europe, and its law and natural science programs draw top students from across the globe. Munich itself offers an unparalleled quality of life — vibrant culture, the Alps on the doorstep, and one of Germany's strongest job markets."},{"name":"KU Leuven","country":"Belgium","flag":"🇧🇪","majors":["Engineering","Medicine","Theology","Law","Biomedical Sciences"],"min_score":78,"tuition":1100,"population":57000,"type":"Public","website":"https://www.kuleuven.be/english","short_description":"Belgium's largest and most prestigious university, consistently ranked #1 in continental Europe for research output and innovation.","full_description":"Founded in 1425, KU Leuven is one of the oldest Catholic universities in the world and Europe's most innovative university for six consecutive years according to Reuters. Its research output is extraordinary — 15 spin-off companies are founded annually from its labs. The biomedical and engineering faculties are globally renowned, and the charming medieval university town of Leuven provides an intimate, student-focused atmosphere unlike any major European city."},{"name":"ETH Zurich","country":"Switzerland","flag":"🇨🇭","majors":["Engineering","Computer Science","Architecture","Natural Sciences","Mathematics"],"min_score":95,"tuition":1500,"population":24000,"type":"Public","website":"https://ethz.ch/en","short_description":"Consistently ranked Top 10 globally — the MIT of Europe, producing Nobel laureates and world-changing engineers since 1855.","full_description":"ETH Zurich is Switzerland's federal technical university and one of the world's top institutions for science, technology, engineering, and mathematics. Einstein studied and later taught here. With 21 Nobel Prize winners among its alumni, ETH's pedigree is undeniable. The computer science and robotics departments are world-leading, and research commercialisation is exceptional — hundreds of startups have emerged from its labs. Zurich's quality of life is among the highest on earth, though students should be prepared for very competitive admissions."},{"name":"University of Copenhagen","country":"Denmark","flag":"🇩🇰","majors":["Medicine","Natural Sciences","Law","Humanities","Social Sciences"],"min_score":75,"tuition":0,"population":40000,"type":"Public","website":"https://www.ku.dk/english","short_description":"Scandinavia's largest university, offering tuition-free education to EU students in one of the world's happiest and safest cities.","full_description":"The University of Copenhagen was founded in 1479 and is consistently ranked among the top 100 universities worldwide. Its medical, pharmaceutical, and health science faculties are exceptional — SUND (the Faculty of Health and Medical Sciences) conducts some of Europe's leading clinical research. EU students pay no tuition whatsoever. Copenhagen's welfare system, design culture, and startup ecosystem make it a magnetic destination for ambitious students, and the university's strong industry connections mean excellent graduate employment prospects."},{"name":"Uppsala University","country":"Sweden","flag":"🇸🇪","majors":["Medicine","Law","Natural Sciences","Theology","Social Sciences"],"min_score":72,"tuition":0,"population":52000,"type":"Public","website":"https://www.uu.se/en","short_description":"Scandinavia's oldest university, founded 1477 — a place of deep academic tradition, groundbreaking research and zero tuition for EU students.","full_description":"Uppsala University is Scandinavia's oldest university and ranks in the global top 100. It has produced Nobel Prize winners in physics, chemistry, and medicine and is home to the world's first-ever student union (founded 1663). The law and medicine faculties maintain exceptional European reputations. The university town of Uppsala itself — 70km from Stockholm — is a true university city where students make up a significant portion of the population, creating an uniquely collegiate atmosphere and rich student life."},{"name":"University of Bologna","country":"Italy","flag":"🇮🇹","majors":["Law","Medicine","Engineering","Arts","Political Science"],"min_score":65,"tuition":3000,"population":85000,"type":"Public","website":"https://www.unibo.it/en","short_description":"The world's oldest university, founded 1088 — a living institution where over 85,000 students study in the heart of beautiful Bologna.","full_description":"The University of Bologna holds the extraordinary distinction of being the world's oldest university in continuous operation. It invented the very concept of the Western university and has attracted students including Dante, Petrarch, and Copernicus. Today it remains a vibrant, internationally recognised research institution with exceptional law, engineering, and political science departments. Bologna itself — the 'fat, red, learned city' — is famous for its food, porticoed streets, and one of Italy's most liveable urban environments."},{"name":"Sorbonne University","country":"France","flag":"🇫🇷","majors":["Literature","Philosophy","Medicine","Science","History"],"min_score":75,"tuition":200,"population":55000,"type":"Public","website":"https://www.sorbonne-universite.fr/en","short_description":"An icon of Western intellectual heritage, the Sorbonne has shaped European thought for 800 years — and tuition is just €200/year.","full_description":"Founded in 1257, Sorbonne University sits at the very heart of Paris and the history of European intellectual life. Alumni include Marie Curie, Simone de Beauvoir, and Jean-Paul Sartre. The medical faculty (Pitié-Salpêtrière) and the faculty of science rank among Europe's best for research output. French public university fees — a symbolic €200 per year — make this an extraordinary value. The Latin Quarter campus, the Bibliothèque Nationale, and Paris's incomparable cultural scene are the bonus."},{"name":"University of Warsaw","country":"Poland","flag":"🇵🇱","majors":["Mathematics","Computer Science","Economics","Law","Psychology"],"min_score":60,"tuition":2000,"population":46000,"type":"Public","website":"https://en.uw.edu.pl","short_description":"Poland's most prestigious university and a hidden gem for international students — world-class education at a fraction of Western prices.","full_description":"The University of Warsaw is Central Europe's leading research university, consistently ranked among the top 3 universities in the region. Its mathematics and computer science departments produce students who routinely win international olympiads and are recruited by Google, Jane Street, and other top firms. Living costs in Warsaw are extraordinarily low by European standards, making this an exceptional value proposition for international students. The university also benefits from Warsaw's explosive tech startup ecosystem, Europe's fastest-growing major economy."},{"name":"Charles University","country":"Czech Republic","flag":"🇨🇿","majors":["Medicine","Law","Natural Sciences","Humanities","Social Sciences"],"min_score":62,"tuition":0,"population":50000,"type":"Public","website":"https://cuni.cz/UKEN-1.html","short_description":"Central Europe's oldest university, founded 1348 — stunning Prague, free tuition in Czech, and a medical school with worldwide recognition.","full_description":"Charles University, founded by Holy Roman Emperor Charles IV in 1348, is Central Europe's oldest and most prestigious university. Its Faculty of Medicine is internationally recognised — attracting thousands of students from the EU, Middle East, and North America specifically for its English-language medical programme. Prague provides arguably Europe's most beautiful urban university setting, and the Czech Republic's low cost of living means students live very comfortably. Tuition in Czech-taught programmes is free; English programmes carry moderate fees."},{"name":"University of Helsinki","country":"Finland","flag":"🇫🇮","majors":["Natural Sciences","Medicine","Law","Education","Agriculture"],"min_score":70,"tuition":0,"population":31000,"type":"Public","website":"https://www.helsinki.fi/en","short_description":"Finland's flagship university in the world's happiest country — free for EU students, world-leading in education research and biosciences.","full_description":"The University of Helsinki is the highest-ranked Nordic university outside Scandinavia and one of Europe's leading research institutions. Finland's extraordinary education system is reflected in the university's Faculty of Education, globally recognised as a centre for pedagogical innovation. The biosciences and pharmacy departments regularly produce breakthrough research. Helsinki as a city offers a unique blend of Nordic design, unspoiled nature, and vibrant tech culture (Rovio, Supercell, and Nokia all emerged from this ecosystem). EU students pay zero tuition."},{"name":"Ghent University","country":"Belgium","flag":"🇧🇪","majors":["Veterinary Science","Bioscience Engineering","Medicine","Law","Economics"],"min_score":70,"tuition":1000,"population":49000,"type":"Public","website":"https://www.ugent.be/en","short_description":"Belgium's most student-friendly university — Ghent is a joyful, bike-filled medieval city where 1 in 5 residents is a student.","full_description":"Ghent University is consistently ranked among Europe's top 100 and is particularly celebrated for its veterinary sciences, bioscience engineering, and pharmaceutical sciences — all globally top-ranked. The city of Ghent has won multiple awards as Europe's most student-friendly city: it's compact, entirely bikeable, lined with medieval architecture, and has one of Belgium's most vibrant nightlife and cultural scenes. The student-to-resident ratio makes it feel genuinely collegiate, unlike the impersonal scale of Brussels or Antwerp."},{"name":"University of Vienna","country":"Austria","flag":"🇦🇹","majors":["Law","Philosophy","Psychology","Business","Natural Sciences"],"min_score":68,"tuition":750,"population":91000,"type":"Public","website":"https://www.univie.ac.at/en","short_description":"One of Europe's largest and oldest universities (1365) in one of the world's most liveable cities — exceptional breadth of programmes at low cost.","full_description":"The University of Vienna is the oldest German-speaking university in the world, founded in 1365, and remains one of Europe's largest with over 91,000 students. Its psychology, philosophy, and law faculties carry particularly strong international reputations. Vienna consistently tops global liveability rankings — the combination of imperial architecture, the Ringstrasse, world-class opera, and extraordinary cafe culture creates an unmatched student lifestyle. EU tuition fees are just €750 per semester, making it remarkable value for one of Europe's great intellectual cities."},{"name":"University of Barcelona","country":"Spain","flag":"🇪🇸","majors":["Medicine","Economics","Law","Chemistry","Psychology"],"min_score":65,"tuition":1500,"population":65000,"type":"Public","website":"https://www.ub.edu/web/ub/en","short_description":"Spain's top university in Europe's most design-forward city — world-class medicine and research with a Mediterranean quality of life.","full_description":"The University of Barcelona is consistently Spain's highest-ranked university and one of the top 200 globally. Its chemistry, biomedicine, and economics faculties are particularly strong, with extensive ties to Barcelona's thriving biotech and startup clusters. The university is spread across the city — the historic main building in the Eixample district is a stunning neo-Gothic landmark. Barcelona's weather, architecture, food, and startup ecosystem (second only to London in Southern Europe) make it one of the most popular student destinations in the world."},{"name":"Trinity College Dublin","country":"Ireland","flag":"🇮🇪","majors":["Computer Science","Law","Medicine","Engineering","Philosophy"],"min_score":82,"tuition":9500,"population":19000,"type":"Public","website":"https://www.tcd.ie","short_description":"Ireland's most prestigious university, founded 1592 — a gorgeous cobblestoned campus in central Dublin with English-language education.","full_description":"Trinity College Dublin is Ireland's oldest and most prestigious university, and one of the world's great seats of learning. It houses the Book of Kells, one of the world's most beautiful medieval manuscripts. Its computer science and engineering programmes benefit enormously from Dublin's position as the European headquarters for Google, Meta, Apple, and Amazon — graduate employment rates are exceptional. The campus, an enclave of 18th-century quadrangles and playing fields in the middle of one of Europe's most charming capitals, is simply breathtaking."},{"name":"Maastricht University","country":"Netherlands","flag":"🇳🇱","majors":["Business","Law","Medicine","Psychology","International Relations"],"min_score":72,"tuition":2314,"population":22000,"type":"Public","website":"https://www.maastrichtuniversity.nl/education","short_description":"Europe's most international university — over 50% international students, pioneering problem-based learning, and a charming Roman city setting.","full_description":"Maastricht University is consistently recognised as Europe's most internationalised university — over half its student body comes from outside the Netherlands, and almost all programmes are taught in English. It pioneered Problem-Based Learning (PBL), a pedagogical approach now adopted worldwide, which places students in small groups tackling real-world cases. Its business, law, and health sciences programmes are particularly strong. Maastricht itself is the Netherlands' southernmost city — Burgundian, warm, lined with Roman ruins, and easily the country's most liveable student city."},{"name":"University of Groningen","country":"Netherlands","flag":"🇳🇱","majors":["Economics","Medicine","Law","Natural Sciences","Behavioural Sciences"],"min_score":70,"tuition":2314,"population":36000,"type":"Public","website":"https://www.rug.nl/education","short_description":"A top-100 global university in the Netherlands' most vibrant student city — with alumni including five Nobel laureates.","full_description":"The University of Groningen was founded in 1614 and counts five Nobel Prize winners among its alumni, including Frits Zernike (physics) and Ben Feringa (chemistry). The economics, law, and behavioural sciences faculties are particularly strong and internationally regarded. Groningen city — where students make up over 25% of the population — is consistently voted the Netherlands' best student city: compact, bike-friendly, affordable, and with an exceptionally active social scene. The university's international orientation means most master's programmes are available in English."},{"name":"Humboldt University of Berlin","country":"Germany","flag":"🇩🇪","majors":["Humanities","Natural Sciences","Law","Medicine","Social Sciences"],"min_score":75,"tuition":320,"population":35000,"type":"Public","website":"https://www.hu-berlin.de/en","short_description":"Berlin's original great university — birthplace of the modern research university model, producing Marx, Einstein, and Hegel among its alumni.","full_description":"Humboldt University of Berlin is one of the most historically significant universities in the world — it literally invented the model of the modern research university in 1810, influencing institutions from Harvard to Tokyo. Alumni include Marx, Engels, Einstein, Hegel, Schopenhauer, Bismarck, and 29 Nobel laureates. Berlin itself — Europe's startup capital and cultural powerhouse — provides an extraordinary urban backdrop. Fees are minimal (around €320/semester for administration) and the humanities, law, and natural science faculties maintain exceptional global rankings."},{"name":"University of Edinburgh","country":"Scotland","flag":"🏴󠁧󠁢󠁳󠁣󠁴󠁿","majors":["Medicine","Law","Computer Science","Veterinary Science","Business"],"min_score":85,"tuition":9250,"population":45000,"type":"Public","website":"https://www.ed.ac.uk","short_description":"One of the world's great universities in one of Europe's most magnificent cities — a powerhouse of medicine, AI research, and arts.","full_description":"The University of Edinburgh, founded in 1583, consistently ranks in the global top 20 for several disciplines. Its medical school is among the oldest and most prestigious in the English-speaking world, and its computer science department is a global leader in AI and machine learning research. Alumni include Charles Darwin, Alexander Graham Bell, and David Hume. Edinburgh city — the Athens of the North — with its dramatic castle, Georgian New Town, and world-renowned Fringe Festival, provides one of the most iconic student experiences in the world."},{"name":"Politecnico di Milano","country":"Italy","flag":"🇮🇹","majors":["Architecture","Engineering","Industrial Design","Urban Planning","Computer Science"],"min_score":78,"tuition":4000,"population":48000,"type":"Public","website":"https://www.polimi.it/en","short_description":"Europe's top technical university for design and engineering — training the architects and engineers who shape the modern world, in fashion capital Milan.","full_description":"Politecnico di Milano is consistently ranked as Europe's top university for architecture and design, and one of the top 10 globally for engineering. Its architecture faculty — responsible for training designers who work at Zaha Hadid, Foster + Partners, and Renzo Piano — is legendary. The industrial design and fashion technology programmes benefit from Milan's unique position as the global capital of design and fashion. The engineering graduates are recruited heavily by Ferrari, Lamborghini, and Europe's aerospace sector. Milan's energy, food, and proximity to the Alps and Lake Como complete the picture."}];
+
+// ─── STATE ───────────────────────────────────────────────────
+let filteredUnis = [...UNIS];
+let activeCountry = 'All';
+
+// ─── INIT ────────────────────────────────────────────────────
+(function init() {
+  buildCountryPills();
+  renderCards(UNIS);
+  // Show PayPal popup after 25 seconds
+  setTimeout(openPaypal, 25000);
+})();
+
+// ─── COUNTRY PILLS ───────────────────────────────────────────
+function buildCountryPills() {
+  const countries = ['All', ...new Set(UNIS.map(u => u.country).sort())];
+  document.getElementById('countryPills').innerHTML = countries.map(c =>
+    `<button class="pill ${c === 'All' ? 'all-pill active' : ''}" onclick="filterByCountry('${c}', this)">${c === 'All' ? '🌍 All' : c}</button>`
+  ).join('');
+}
+
+function filterByCountry(country, btn) {
+  activeCountry = country;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+// ─── FILTERS ─────────────────────────────────────────────────
+function applyFilters() {
+  const budget   = parseInt(document.getElementById('filterBudget').value) || Infinity;
+  const score    = parseInt(document.getElementById('filterScore').value)  || 0;
+  const majorVal = document.getElementById('filterMajor').value.toLowerCase().trim();
+  const typeVal  = document.getElementById('filterType').value;
+
+  filteredUnis = UNIS.filter(u =>
+    u.tuition <= budget &&
+    (score === 0 || u.min_score <= score) &&
+    (!majorVal || u.majors.some(m => m.toLowerCase().includes(majorVal))) &&
+    (activeCountry === 'All' || u.country === activeCountry) &&
+    (!typeVal || u.type === typeVal)
+  );
+  renderCards(filteredUnis);
+}
+
+function resetFilters() {
+  ['filterBudget','filterScore','filterMajor'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('filterType').value = '';
+  activeCountry = 'All';
+  document.querySelectorAll('.pill').forEach((p, i) => p.classList.toggle('active', i === 0));
+  filteredUnis = [...UNIS];
+  renderCards(filteredUnis);
+}
+
+// ─── RENDER ──────────────────────────────────────────────────
+function renderCards(unis) {
+  document.getElementById('resultsCount').textContent =
+    `${unis.length} universit${unis.length === 1 ? 'y' : 'ies'} found`;
+
+  if (!unis.length) {
+    document.getElementById('uniGrid').innerHTML = `
+      <div class="no-results">
+        <div class="no-results-icon">🔍</div>
+        <h3>No universities match</h3>
+        <p>Try adjusting your filters or hit Reset to see all 20 universities.</p>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('uniGrid').innerHTML = unis.map((u, i) => {
+    const idx = UNIS.indexOf(u);
+    return `
+    <div class="uni-card" onclick="openModal(${idx})" style="animation: fadeUp 0.35s ease ${i * 0.04}s both">
+      <div class="uni-card-top">
+        <span class="uni-card-flag">${u.flag}</span>
+        <div class="uni-card-name">${u.name}</div>
+        <div class="uni-card-country">${u.country}</div>
+        <div class="uni-card-desc">${u.short_description}</div>
+      </div>
+      <div class="uni-card-stats">
+        <div class="stat">
+          <div class="stat-label">Tuition / yr</div>
+          <div class="stat-value ${u.tuition === 0 ? 'free' : ''}">${u.tuition === 0 ? 'Free ✓' : '€' + u.tuition.toLocaleString()}</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Min Score</div>
+          <div class="stat-value">${u.min_score}%</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Students</div>
+          <div class="stat-value">${(u.population/1000).toFixed(0)}k</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Type</div>
+          <div class="stat-value">${u.type}</div>
+        </div>
+      </div>
+      <div class="uni-card-footer">
+        <div class="majors-wrap">
+          ${u.majors.slice(0,2).map(m => `<span class="major-tag">${m}</span>`).join('')}
+          ${u.majors.length > 2 ? `<span class="major-tag">+${u.majors.length - 2}</span>` : ''}
+        </div>
+        <button class="view-btn">View →</button>
+      </div>
+    </div>`}).join('');
+}
+
+// ─── UNI MODAL ───────────────────────────────────────────────
+function openModal(idx) {
+  const u = UNIS[idx];
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header">
+      <div>
+        <div class="modal-flag">${u.flag}</div>
+        <div class="modal-country">${u.country} · ${u.type}</div>
+        <div class="modal-name">${u.name}</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-stats-grid">
+        <div class="modal-stat">
+          <div class="stat-label">Tuition / year</div>
+          <div class="stat-value ${u.tuition === 0 ? 'free' : ''}">${u.tuition === 0 ? 'Free ✓' : '€' + u.tuition.toLocaleString()}</div>
+        </div>
+        <div class="modal-stat">
+          <div class="stat-label">Min Entry Score</div>
+          <div class="stat-value">${u.min_score}%</div>
+        </div>
+        <div class="modal-stat">
+          <div class="stat-label">Student Body</div>
+          <div class="stat-value">${u.population.toLocaleString()}</div>
+        </div>
+      </div>
+      <div class="modal-section-label">About</div>
+      <p class="modal-desc">${u.full_description}</p>
+      <div class="modal-section-label">Popular Programmes</div>
+      <div class="modal-majors">${u.majors.map(m => `<span class="major-tag">${m}</span>`).join('')}</div>
+      <div class="modal-actions">
+        <a class="btn-website" href="${u.website}" target="_blank" rel="noopener">🌐 Official Website →</a>
+        <button class="btn-close-modal" onclick="closeModal()">Close</button>
+      </div>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ─── PAYPAL MODAL ────────────────────────────────────────────
+function openPaypal() {
+  document.getElementById('paypalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePaypal() {
+  document.getElementById('paypalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('paypalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closePaypal();
+});
+
+// ─── KEYBOARD ────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closePaypal(); }
+});
+</script>
+</body>
+</html>
